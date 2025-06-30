@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数据类型与运算符练习</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            background-color: #f8f9fa;
+        }
+        .output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 10px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .tip {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 JavaScript 数据类型与运算符实战</h1>
+        
+        <div class="tip">
+            💡 <strong>学习提示：</strong>点击下面的按钮运行不同的示例，观察控制台输出结果。
+            按 F12 打开开发者工具查看 Console 面板。
+        </div>
+
+        <div class="section">
+            <h3>🎯 学习目标</h3>
+            <ul>
+                <li>掌握 JavaScript 的基本数据类型（number, string, boolean, undefined, null）</li>
+                <li>理解复合数据类型（array, object）</li>
+                <li>熟练使用各种运算符（算术、比较、逻辑、赋值）</li>
+                <li>能够在实际场景中应用这些知识</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>📝 交互式练习</h3>
+            <button onclick="runBasicTypes()">运行基本数据类型示例</button>
+            <button onclick="runOperators()">运行运算符示例</button>
+            <button onclick="runPracticalExample()">运行实际应用示例</button>
+            <button onclick="clearConsole()">清空控制台</button>
+        </div>
+
+        <div class="section">
+            <h3>🖥️ 输出结果</h3>
+            <div id="output" class="output">
+                点击上面的按钮查看运行结果...
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🏋️‍♂️ 动手练习</h3>
+            <p>在控制台中尝试以下练习：</p>
+            <ol>
+                <li>创建一个变量存储你的年龄，并判断是否成年（>= 18）</li>
+                <li>创建两个数字，计算它们的和、差、积、商</li>
+                <li>创建一个包含你喜欢的颜色的数组</li>
+                <li>创建一个对象描述你自己（姓名、年龄、爱好等）</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="dataTypes.js"></script>
+    <script>
+        const outputDiv = document.getElementById('output');
+        
+        // 重写 console.log 以便在页面上显示输出
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            outputDiv.innerHTML += message + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        function runBasicTypes() {
+            clearOutput();
+            console.log("=== 基本数据类型演示 ===");
+            
+            // Number 类型
+            let age = 25;
+            let price = 99.99;
+            console.log("数字示例:");
+            console.log("年龄:", age, "类型:", typeof age);
+            console.log("价格:", price, "类型:", typeof price);
+            
+            // String 类型
+            let name = "小李";
+            let message = `你好，我是${name}`;
+            console.log("\n字符串示例:");
+            console.log("姓名:", name, "类型:", typeof name);
+            console.log("消息:", message);
+            
+            // Boolean 类型
+            let isOnline = true;
+            console.log("\n布尔示例:");
+            console.log("在线状态:", isOnline, "类型:", typeof isOnline);
+            
+            // Array 和 Object
+            let hobbies = ["阅读", "音乐", "编程"];
+            let person = { name: "小李", age: 25, city: "上海" };
+            console.log("\n复合类型示例:");
+            console.log("爱好数组:", hobbies);
+            console.log("个人信息:", person);
+        }
+
+        function runOperators() {
+            clearOutput();
+            console.log("=== 运算符演示 ===");
+            
+            let a = 15;
+            let b = 4;
+            
+            console.log("算术运算 (a=15, b=4):");
+            console.log("a + b =", a + b);
+            console.log("a - b =", a - b);
+            console.log("a * b =", a * b);
+            console.log("a / b =", a / b);
+            console.log("a % b =", a % b);
+            
+            console.log("\n比较运算:");
+            console.log("a > b:", a > b);
+            console.log("a === 15:", a === 15);
+            console.log("a !== b:", a !== b);
+            
+            console.log("\n逻辑运算:");
+            let hasLicense = true;
+            let hasExperience = false;
+            console.log("可以开车 (有驾照 && 有经验):", hasLicense && hasExperience);
+            console.log("符合条件 (有驾照 || 有经验):", hasLicense || hasExperience);
+            console.log("没有经验:", !hasExperience);
+        }
+
+        function runPracticalExample() {
+            clearOutput();
+            console.log("=== 实际应用示例 ===");
+            
+            // 购物车计算
+            console.log("🛒 购物车计算:");
+            let itemPrice = 59.9;
+            let quantity = 2;
+            let taxRate = 0.08;
+            
+            let subtotal = itemPrice * quantity;
+            let tax = subtotal * taxRate;
+            let total = subtotal + tax;
+            
+            console.log("商品单价:", itemPrice, "元");
+            console.log("购买数量:", quantity, "件");
+            console.log("小计:", subtotal, "元");
+            console.log("税费:", tax.toFixed(2), "元");
+            console.log("总计:", total.toFixed(2), "元");
+            
+            // 成绩评级
+            console.log("\n📊 成绩评级:");
+            let score = 85;
+            let grade;
+            
+            if (score >= 90) {
+                grade = "A";
+            } else if (score >= 80) {
+                grade = "B";
+            } else if (score >= 70) {
+                grade = "C";
+            } else if (score >= 60) {
+                grade = "D";
+            } else {
+                grade = "F";
+            }
+            
+            console.log("分数:", score);
+            console.log("等级:", grade);
+            
+            // 用户信息处理
+            console.log("\n👤 用户信息处理:");
+            let user = {
+                name: "张三",
+                age: 28,
+                email: "zhangsan@example.com",
+                interests: ["编程", "阅读", "旅行"]
+            };
+            
+            console.log("用户姓名:", user.name);
+            console.log("用户年龄:", user.age);
+            console.log("是否成年:", user.age >= 18 ? "是" : "否");
+            console.log("兴趣爱好:", user.interests.join(", "));
+        }
+
+        function clearOutput() {
+            outputDiv.innerHTML = '';
+        }
+
+        function clearConsole() {
+            clearOutput();
+            console.log("控制台已清空，准备新的练习...");
+        }
+
+        // 初始化
+        console.log("🎉 欢迎来到 JavaScript 数据类型与运算符学习页面！");
+        console.log("点击按钮开始学习，或者在控制台中尝试自己的代码。");
+    </script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 函数学习实战</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+        }
+        
+        .demo-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #e9ecef;
+        }
+        
+        .output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .interactive-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 15px 0;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .tip {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 JavaScript 函数大师课</h1>
+        
+        <div class="tip">
+            💡 <strong>学习指南：</strong>函数是JavaScript的核心！通过下面的交互示例，
+            你将掌握函数声明、参数传递、返回值、作用域、闭包等重要概念。
+            建议按顺序学习，每个示例都包含详细解释。
+        </div>
+
+        <div class="section">
+            <h3>📚 学习目标</h3>
+            <div class="grid">
+                <div class="card">
+                    <strong>🎯 基础语法</strong><br>
+                    掌握函数声明的三种方式
+                </div>
+                <div class="card">
+                    <strong>📝 参数传递</strong><br>
+                    理解各种参数类型和用法
+                </div>
+                <div class="card">
+                    <strong>🔄 返回值</strong><br>
+                    学会处理函数的返回结果
+                </div>
+                <div class="card">
+                    <strong>🎭 作用域</strong><br>
+                    理解变量的可见性范围
+                </div>
+            </div>
+        </div>        <div class="section">
+            <h3>🎮 交互式学习</h3>
+            <div class="grid">
+                <button onclick="demoBasicFunctions()">基础函数声明</button>
+                <button onclick="demoParameters()">参数传递演示</button>
+                <button onclick="demoReturnValues()">返回值处理</button>
+                <button onclick="demoScope()">作用域与闭包</button>
+                <button onclick="demoHigherOrder()">高阶函数</button>
+                <button onclick="demoRecursion()">递归函数</button>
+                <button onclick="demoUtilities()">实用工具函数</button>
+                <button onclick="demoES6Features()">ES6新特性</button>
+                <button onclick="clearConsole()">清空输出</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 实时练习区</h3>
+            
+            <div class="interactive-demo">
+                <h4>🔢 计算器函数</h4>
+                <input type="number" id="num1" placeholder="第一个数字" value="10">
+                <select id="operation">
+                    <option value="add">加法</option>
+                    <option value="subtract">减法</option>
+                    <option value="multiply">乘法</option>
+                    <option value="divide">除法</option>
+                </select>
+                <input type="number" id="num2" placeholder="第二个数字" value="5">
+                <button onclick="calculate()">计算</button>
+                <div id="calc-result" style="margin-top: 10px; font-weight: bold;"></div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>📝 文本处理函数</h4>
+                <input type="text" id="textInput" placeholder="输入一些文字" value="Hello World">
+                <button onclick="processText()">处理文本</button>
+                <div id="text-result" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🛒 购物车模拟</h4>
+                <input type="text" id="itemName" placeholder="商品名称" value="苹果">
+                <input type="number" id="itemPrice" placeholder="价格" value="5.5" step="0.1">
+                <input type="number" id="itemQty" placeholder="数量" value="3">
+                <button onclick="addToCart()">添加到购物车</button>
+                <button onclick="showCart()">查看购物车</button>
+                <button onclick="clearCart()">清空购物车</button>
+                <div id="cart-result" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🖥️ 输出结果</h3>
+            <div id="output" class="output">
+                点击上面的按钮开始学习函数...
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🏋️‍♂️ 挑战练习</h3>
+            <ol>
+                <li><strong>温度转换器：</strong>写函数实现摄氏度和华氏度互转</li>
+                <li><strong>密码强度检测：</strong>检查密码是否包含数字、字母、特殊字符</li>
+                <li><strong>数组去重：</strong>写函数移除数组中的重复元素</li>
+                <li><strong>简单银行账户：</strong>使用闭包实现存款、取款、查询余额功能</li>
+                <li><strong>递归目录遍历：</strong>递归函数处理嵌套的数据结构</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="functions.js"></script>
+    <script>
+        const outputDiv = document.getElementById('output');
+        
+        // 重写 console.log 显示在页面上
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => {
+                if (typeof arg === 'object' && arg !== null) {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            outputDiv.innerHTML += message + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        // 创建购物车实例
+        let shoppingCart = createShoppingCart();
+
+        function demoBasicFunctions() {
+            clearOutput();
+            console.log("=== 🎯 基础函数声明演示 ===\n");
+            
+            // 函数声明
+            function sayHello(name) {
+                return `你好，${name}！`;
+            }
+            
+            // 函数表达式
+            const sayGoodbye = function(name) {
+                return `再见，${name}！`;
+            };
+            
+            // 箭头函数
+            const greet = name => `欢迎，${name}！`;
+            const multiply = (a, b) => a * b;
+            
+            console.log("函数声明:", sayHello("小明"));
+            console.log("函数表达式:", sayGoodbye("小红"));
+            console.log("箭头函数:", greet("小李"));
+            console.log("箭头函数计算:", multiply(6, 7));
+            
+            console.log("\n💡 三种方式各有特点：");
+            console.log("• 函数声明：可提升，可在声明前调用");
+            console.log("• 函数表达式：不可提升，更灵活");
+            console.log("• 箭头函数：语法简洁，this指向不同");
+        }
+
+        function demoParameters() {
+            clearOutput();
+            console.log("=== 📝 参数传递演示 ===\n");
+            
+            // 基本参数
+            function introduce(name, age) {
+                return `我是${name}，今年${age}岁`;
+            }
+            
+            // 默认参数
+            function createUser(name, role = "用户") {
+                return `${name} - 角色：${role}`;
+            }
+            
+            // 剩余参数
+            function sum(...numbers) {
+                return numbers.reduce((total, num) => total + num, 0);
+            }
+            
+            // 参数解构
+            function formatPerson({name, age, city = "未知"}) {
+                return `${name}，${age}岁，来自${city}`;
+            }
+            
+            console.log("基本参数:", introduce("张三", 25));
+            console.log("默认参数:", createUser("李四"));
+            console.log("默认参数:", createUser("王五", "管理员"));
+            console.log("剩余参数:", sum(1, 2, 3, 4, 5, 6));
+            console.log("解构参数:", formatPerson({name: "赵六", age: 30, city: "上海"}));
+        }
+
+        function demoReturnValues() {
+            clearOutput();
+            console.log("=== 🔄 返回值处理演示 ===\n");
+            
+            // 返回基本值
+            function getCircleArea(radius) {
+                return Math.PI * radius * radius;
+            }
+            
+            // 返回数组
+            function getStats(numbers) {
+                return [
+                    Math.min(...numbers),
+                    Math.max(...numbers),
+                    numbers.reduce((a, b) => a + b) / numbers.length
+                ];
+            }
+            
+            // 返回对象
+            function analyzeString(str) {
+                return {
+                    length: str.length,
+                    words: str.split(' ').length,
+                    firstChar: str[0],
+                    lastChar: str[str.length - 1],
+                    reversed: str.split('').reverse().join('')
+                };
+            }
+            
+            const area = getCircleArea(5);
+            const [min, max, avg] = getStats([1, 5, 3, 9, 2]);
+            const analysis = analyzeString("JavaScript 很棒");
+            
+            console.log("圆面积:", area.toFixed(2));
+            console.log("数组统计 - 最小值:", min, "最大值:", max, "平均值:", avg.toFixed(2));
+            console.log("字符串分析:", analysis);
+        }
+
+        function demoScope() {
+            clearOutput();
+            console.log("=== 🎭 作用域与闭包演示 ===\n");
+            
+            // 闭包计数器
+            function createCounter(start = 0) {
+                let count = start;
+                return {
+                    increment: () => ++count,
+                    decrement: () => --count,
+                    getValue: () => count,
+                    reset: () => count = start
+                };
+            }
+            
+            // 闭包配置管理器
+            function createConfig() {
+                let config = {};
+                return {
+                    set: (key, value) => config[key] = value,
+                    get: key => config[key],
+                    getAll: () => ({...config}),
+                    clear: () => config = {}
+                };
+            }
+            
+            const counter = createCounter(10);
+            const appConfig = createConfig();
+            
+            console.log("初始计数:", counter.getValue());
+            console.log("递增:", counter.increment());
+            console.log("递增:", counter.increment());
+            console.log("递减:", counter.decrement());
+            console.log("当前值:", counter.getValue());
+            
+            appConfig.set("theme", "dark");
+            appConfig.set("language", "zh-CN");
+            console.log("配置管理:", appConfig.getAll());
+        }
+
+        function demoHigherOrder() {
+            clearOutput();
+            console.log("=== 🚀 高阶函数演示 ===\n");
+            
+            // 函数作为参数
+            function applyOperation(numbers, operation) {
+                return numbers.map(operation);
+            }
+            
+            // 函数工厂
+            function createValidator(rule) {
+                return function(value) {
+                    return rule(value);
+                };
+            }
+            
+            const numbers = [1, 2, 3, 4, 5];
+            const doubled = applyOperation(numbers, x => x * 2);
+            const squared = applyOperation(numbers, x => x * x);
+            
+            const isPositive = createValidator(x => x > 0);
+            const isEven = createValidator(x => x % 2 === 0);
+            
+            console.log("原数组:", numbers);
+            console.log("翻倍操作:", doubled);
+            console.log("平方操作:", squared);
+            console.log("5是正数:", isPositive(5));
+            console.log("4是偶数:", isEven(4));
+            console.log("3是偶数:", isEven(3));
+        }
+
+        function demoRecursion() {
+            clearOutput();
+            console.log("=== 🔄 递归函数演示 ===\n");
+            
+            // 阶乘计算
+            function factorial(n) {
+                if (n <= 1) return 1;
+                return n * factorial(n - 1);
+            }
+            
+            // 倒计时
+            function countdown(n) {
+                if (n <= 0) {
+                    console.log("🎉 倒计时结束！");
+                    return;
+                }
+                console.log(`倒计时: ${n}`);
+                countdown(n - 1);
+            }
+            
+            // 数组扁平化
+            function flattenArray(arr) {
+                let result = [];
+                for (let item of arr) {
+                    if (Array.isArray(item)) {
+                        result.push(...flattenArray(item));
+                    } else {
+                        result.push(item);
+                    }
+                }
+                return result;
+            }
+            
+            console.log("5的阶乘:", factorial(5));
+            countdown(5);
+            
+            const nestedArray = [1, [2, 3], [4, [5, 6]], 7];
+            console.log("嵌套数组:", nestedArray);
+            console.log("扁平化后:", flattenArray(nestedArray));
+        }        function demoUtilities() {
+            clearOutput();
+            console.log("=== 🛠️ 实用工具函数演示 ===\n");
+            
+            // 随机数生成器
+            function random(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            
+            // 数组去重
+            function uniqueArray(arr) {
+                return [...new Set(arr)];
+            }
+            
+            // 延迟函数
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            // 格式化数字
+            function formatNumber(num, decimals = 2) {
+                return Number(num).toFixed(decimals);
+            }
+            
+            console.log("随机数 (1-100):", random(1, 100));
+            console.log("数组去重:", uniqueArray([1, 2, 2, 3, 3, 4, 5, 5]));
+            console.log("格式化数字:", formatNumber(3.14159, 3));
+            console.log("价格格式:", "¥" + formatNumber(123.456, 2));
+            
+            // 异步延迟示例
+            console.log("开始延迟...");
+            delay(1000).then(() => console.log("1秒后执行"));
+        }
+
+        function demoES6Features() {
+            clearOutput();
+            console.log("=== 🚀 ES6核心特性演示 ===\n");
+            
+            // 箭头函数
+            const add = (a, b) => a + b;
+            const square = x => x * x;
+            console.log("箭头函数:", add(3, 4), square(5));
+            
+            // 模板字符串
+            const name = "张三", age = 25;
+            console.log("模板字符串:", `我是${name}，今年${age}岁`);
+            
+            // 解构赋值
+            const colors = ["红", "绿", "蓝"];
+            const [first, second] = colors;
+            console.log("数组解构:", first, second);
+            
+            const person = {username: "admin", email: "admin@test.com"};
+            const {username, email} = person;
+            console.log("对象解构:", username, email);
+            
+            // 展开运算符
+            const arr1 = [1, 2, 3];
+            const arr2 = [4, 5, 6];
+            const combined = [...arr1, ...arr2];
+            console.log("数组展开:", combined);
+            
+            // 默认参数
+            const greet = (name = "朋友") => `你好，${name}！`;
+            console.log("默认参数:", greet(), greet("小明"));
+            
+            // Set 和 Map
+            const uniqueSet = new Set([1, 2, 2, 3, 3, 4]);
+            console.log("Set去重:", Array.from(uniqueSet));
+            
+            const userMap = new Map();
+            userMap.set("name", "李四");
+            userMap.set("age", 30);
+            console.log("Map操作:", userMap.get("name"), userMap.get("age"));
+        }
+
+        // 交互式功能
+        function calculate() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const operation = document.getElementById('operation').value;
+            const resultDiv = document.getElementById('calc-result');
+            
+            const operations = {
+                add: (a, b) => a + b,
+                subtract: (a, b) => a - b,
+                multiply: (a, b) => a * b,
+                divide: (a, b) => b !== 0 ? a / b : "除数不能为0"
+            };
+            
+            const result = operations[operation](num1, num2);
+            resultDiv.innerHTML = `结果: ${result}`;
+        }
+
+        function processText() {
+            const text = document.getElementById('textInput').value;
+            const resultDiv = document.getElementById('text-result');
+            
+            const processed = {
+                原文: text,
+                长度: text.length,
+                单词数: text.split(' ').length,
+                大写: text.toUpperCase(),
+                小写: text.toLowerCase(),
+                反转: text.split('').reverse().join('')
+            };
+            
+            resultDiv.innerHTML = Object.entries(processed)
+                .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                .join('<br>');
+        }
+
+        function addToCart() {
+            const name = document.getElementById('itemName').value;
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const qty = parseInt(document.getElementById('itemQty').value);
+            
+            if (name && !isNaN(price) && !isNaN(qty)) {
+                const message = shoppingCart.addItem(name, price, qty);
+                document.getElementById('cart-result').innerHTML = message;
+            }
+        }
+
+        function showCart() {
+            const items = shoppingCart.getItems();
+            const total = shoppingCart.getTotal();
+            const resultDiv = document.getElementById('cart-result');
+            
+            if (items.length === 0) {
+                resultDiv.innerHTML = "购物车为空";
+            } else {
+                resultDiv.innerHTML = `
+                    <strong>购物车内容:</strong><br>
+                    ${items.join('<br>')}
+                    <br><br><strong>总计: ¥${total.toFixed(2)}</strong>
+                `;
+            }
+        }
+
+        function clearCart() {
+            shoppingCart = createShoppingCart();
+            document.getElementById('cart-result').innerHTML = "购物车已清空";
+        }
+
+        function clearOutput() {
+            outputDiv.innerHTML = '';
+        }
+
+        function clearConsole() {
+            clearOutput();
+            console.log("🎉 输出已清空，准备新的学习！");
+        }
+
+        // 初始化
+        console.log("🎉 欢迎来到 JavaScript 函数大师课！");
+        console.log("点击按钮开始探索函数的奥秘...");
+    </script>
+</body>
+</html>

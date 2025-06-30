@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 条件判断与循环实战</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+        }
+        
+        .demo-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #e9ecef;
+        }
+        
+        .output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 15px 0;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .interactive-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 15px 0;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .tip {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result-display {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 JavaScript 条件判断与循环大师课</h1>
+        
+        <div class="tip">
+            💡 <strong>学习重点：</strong>条件判断和循环是编程的核心逻辑！
+            掌握这些概念后，你就能让程序自动做决策和重复执行任务了。
+            建议从基础开始，逐步掌握每种语法的使用场景。
+        </div>
+
+        <div class="section">
+            <h3>🎯 学习目标</h3>
+            <div class="grid">
+                <div class="card">
+                    <strong>🔀 条件判断</strong><br>
+                    if/else, switch, 三元运算符
+                </div>
+                <div class="card">
+                    <strong>🔄 循环结构</strong><br>
+                    for, while, do-while
+                </div>
+                <div class="card">
+                    <strong>🆕 现代循环</strong><br>
+                    for...of, for...in
+                </div>
+                <div class="card">
+                    <strong>⚡ 循环控制</strong><br>
+                    break, continue, 性能优化
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎮 核心概念演示</h3>
+            <div class="grid">
+                <button onclick="demoConditions()">条件判断基础</button>
+                <button onclick="demoComparisons()">比较运算符</button>
+                <button onclick="demoLogicalOps()">逻辑运算符</button>
+                <button onclick="demoTernary()">三元运算符</button>
+                <button onclick="demoSwitch()">Switch语句</button>
+                <button onclick="demoForLoops()">For循环详解</button>
+                <button onclick="demoWhileLoops()">While循环</button>
+                <button onclick="demoModernLoops()">现代循环语法</button>
+                <button onclick="clearConsole()">清空输出</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 交互式练习区</h3>
+            
+            <div class="interactive-demo">
+                <h4>🎯 成绩评级系统</h4>
+                <input type="number" id="scoreInput" placeholder="输入成绩 (0-100)" min="0" max="100" value="85">
+                <button onclick="gradeScore()">评级</button>
+                <div id="gradeResult" class="result-display" style="display: none;"></div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🎲 猜数字游戏</h4>
+                <p>我想了一个1-100之间的数字，你来猜！</p>
+                <input type="number" id="guessInput" placeholder="输入你的猜测" min="1" max="100">
+                <button onclick="makeGuess()">猜测</button>
+                <button onclick="startNewGame()">新游戏</button>
+                <div id="guessResult"></div>
+                <div id="guessProgress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <span id="attemptsDisplay">尝试次数: 0/10</span>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🛒 购物车计算器</h4>
+                <div style="margin-bottom: 10px;">
+                    <input type="text" id="itemName" placeholder="商品名称" value="苹果">
+                    <input type="number" id="itemPrice" placeholder="单价" step="0.01" value="5.5">
+                    <input type="number" id="itemQuantity" placeholder="数量" value="3">
+                    <button onclick="addToCart()">添加到购物车</button>
+                    <button onclick="clearCart()">清空购物车</button>
+                </div>
+                <div id="cartDisplay"></div>
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🔢 数字模式生成器</h4>
+                <select id="patternType">
+                    <option value="even">偶数序列</option>
+                    <option value="odd">奇数序列</option>
+                    <option value="fibonacci">斐波那契数列</option>
+                    <option value="prime">质数序列</option>
+                    <option value="multiplication">乘法表</option>
+                </select>
+                <input type="number" id="patternCount" placeholder="生成数量" value="10" min="1" max="20">
+                <button onclick="generatePattern()">生成模式</button>
+                <div id="patternResult"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🖥️ 输出结果</h3>
+            <div id="output" class="output">
+                点击上面的按钮开始学习条件判断与循环...
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🏋️‍♂️ 挑战练习</h3>
+            <ol>
+                <li><strong>用户登录验证：</strong>实现用户名密码验证逻辑</li>
+                <li><strong>年龄分组统计：</strong>统计不同年龄段的人数分布</li>
+                <li><strong>考试成绩分析：</strong>计算平均分、最高分、及格率</li>
+                <li><strong>图形绘制：</strong>用循环绘制三角形、菱形等图案</li>
+                <li><strong>数据筛选器：</strong>根据条件筛选和排序数组数据</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="conditions-loops.js"></script>
+    <script>
+        const outputDiv = document.getElementById('output');
+        
+        // 重写 console.log 显示在页面上
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => {
+                if (typeof arg === 'object' && arg !== null) {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            outputDiv.innerHTML += message + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        // 猜数字游戏变量
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        let maxAttempts = 10;
+
+        // 购物车数组
+        let cart = [];
+
+        function demoConditions() {
+            clearOutput();
+            console.log("=== 🔀 条件判断基础演示 ===\n");
+            
+            const testScores = [95, 87, 76, 64, 52];
+            
+            console.log("成绩评级系统:");
+            testScores.forEach(score => {
+                let grade;
+                if (score >= 90) {
+                    grade = "A (优秀)";
+                } else if (score >= 80) {
+                    grade = "B (良好)";
+                } else if (score >= 70) {
+                    grade = "C (中等)";
+                } else if (score >= 60) {
+                    grade = "D (及格)";
+                } else {
+                    grade = "F (不及格)";
+                }
+                console.log(`分数 ${score}: ${grade}`);
+            });
+            
+            // 年龄分组示例
+            const ages = [15, 25, 35, 45, 55, 65];
+            console.log("\n年龄分组:");
+            ages.forEach(age => {
+                let category;
+                if (age < 18) {
+                    category = "未成年";
+                } else if (age < 35) {
+                    category = "青年";
+                } else if (age < 60) {
+                    category = "中年";
+                } else {
+                    category = "老年";
+                }
+                console.log(`年龄 ${age}: ${category}`);
+            });
+        }
+
+        function demoComparisons() {
+            clearOutput();
+            console.log("=== ⚖️ 比较运算符演示 ===\n");
+            
+            const a = 10, b = "10", c = 20;
+            
+            console.log("数值比较:");
+            console.log(`${a} > ${c}: ${a > c}`);
+            console.log(`${a} < ${c}: ${a < c}`);
+            console.log(`${a} >= ${a}: ${a >= a}`);
+            console.log(`${a} <= ${c}: ${a <= c}`);
+            
+            console.log("\n相等性比较 (重要概念):");
+            console.log(`${a} == "${b}": ${a == b} (宽松相等，会类型转换)`);
+            console.log(`${a} === "${b}": ${a === b} (严格相等，不转换类型)`);
+            console.log(`${a} != "${b}": ${a != b}`);
+            console.log(`${a} !== "${b}": ${a !== b}`);
+            
+            console.log("\n实际应用示例:");
+            const userInput = "25";
+            const userAge = parseInt(userInput);
+            console.log(`用户输入: "${userInput}" (字符串)`);
+            console.log(`转换后: ${userAge} (数字)`);
+            console.log(`是否成年: ${userAge >= 18}`);
+        }
+
+        function demoLogicalOps() {
+            clearOutput();
+            console.log("=== 🧠 逻辑运算符演示 ===\n");
+            
+            const user = {
+                age: 25,
+                hasLicense: true,
+                hasInsurance: false,
+                isVIP: true
+            };
+            
+            console.log("用户信息:", user);
+            console.log("\n逻辑运算结果:");
+            console.log(`可以开车 (年龄>=18 && 有驾照): ${user.age >= 18 && user.hasLicense}`);
+            console.log(`需要保险 (!有保险): ${!user.hasInsurance}`);
+            console.log(`符合条件 (有驾照 || VIP): ${user.hasLicense || user.isVIP}`);
+            
+            // 短路求值演示
+            console.log("\n短路求值演示:");
+            const userName = null;
+            const displayName = userName || "游客";
+            console.log(`用户名: ${userName}, 显示名: ${displayName}`);
+            
+            const config = { theme: "dark", lang: "zh" };
+            const theme = config && config.theme;
+            console.log(`主题设置: ${theme}`);
+        }
+
+        function demoTernary() {
+            clearOutput();
+            console.log("=== 🔄 三元运算符演示 ===\n");
+            
+            // 基本三元运算符
+            const age = 20;
+            const status = age >= 18 ? "成年人" : "未成年人";
+            console.log(`年龄 ${age}, 状态: ${status}`);
+            
+            // 嵌套三元运算符
+            const score = 85;
+            const level = score >= 90 ? "优秀" : score >= 70 ? "良好" : "需要努力";
+            console.log(`分数 ${score}, 等级: ${level}`);
+            
+            // 实际应用
+            const weather = { temperature: 25, isRaining: false };
+            const suggestion = weather.temperature > 30 ? "太热了，待在室内" :
+                              weather.temperature < 10 ? "太冷了，多穿衣服" :
+                              weather.isRaining ? "带把雨伞" : "天气不错，出去走走";
+            console.log(`天气建议: ${suggestion}`);
+            
+            // 数组处理
+            const numbers = [1, 2, 3, 4, 5];
+            const processed = numbers.map(n => n % 2 === 0 ? `偶数${n}` : `奇数${n}`);
+            console.log("数字分类:", processed);
+        }
+
+        function demoSwitch() {
+            clearOutput();
+            console.log("=== 🎛️ Switch语句演示 ===\n");
+            
+            // 星期几判断
+            function getDayInfo(day) {
+                switch (day) {
+                    case 1:
+                        return "星期一 - 新的开始";
+                    case 2:
+                        return "星期二 - 继续努力";
+                    case 3:
+                        return "星期三 - 过半了";
+                    case 4:
+                        return "星期四 - 快到周末";
+                    case 5:
+                        return "星期五 - 感谢上帝";
+                    case 6:
+                    case 7:
+                        return "周末 - 休息时间";
+                    default:
+                        return "无效的日期";
+                }
+            }
+            
+            for (let day = 1; day <= 7; day++) {
+                console.log(`第${day}天: ${getDayInfo(day)}`);
+            }
+            
+            // 成绩等级判断
+            console.log("\n成绩等级判断:");
+            const grades = ['A', 'B', 'C', 'D', 'F'];
+            grades.forEach(grade => {
+                let description;
+                switch (grade) {
+                    case 'A':
+                        description = "优秀 (90-100分)";
+                        break;
+                    case 'B':
+                        description = "良好 (80-89分)";
+                        break;
+                    case 'C':
+                        description = "中等 (70-79分)";
+                        break;
+                    case 'D':
+                        description = "及格 (60-69分)";
+                        break;
+                    case 'F':
+                        description = "不及格 (0-59分)";
+                        break;
+                    default:
+                        description = "无效等级";
+                }
+                console.log(`等级 ${grade}: ${description}`);
+            });
+        }
+
+        function demoForLoops() {
+            clearOutput();
+            console.log("=== 🔄 For循环详解 ===\n");
+            
+            // 基本 for 循环
+            console.log("1. 基本 for 循环:");
+            for (let i = 1; i <= 5; i++) {
+                console.log(`  第${i}次循环`);
+            }
+            
+            // 遍历数组
+            console.log("\n2. 遍历数组:");
+            const fruits = ["苹果", "香蕉", "橘子"];
+            for (let i = 0; i < fruits.length; i++) {
+                console.log(`  索引${i}: ${fruits[i]}`);
+            }
+            
+            // 倒序遍历
+            console.log("\n3. 倒序遍历:");
+            for (let i = fruits.length - 1; i >= 0; i--) {
+                console.log(`  倒序: ${fruits[i]}`);
+            }
+            
+            // 嵌套循环 - 乘法表
+            console.log("\n4. 嵌套循环 - 3x3乘法表:");
+            for (let i = 1; i <= 3; i++) {
+                let row = "  ";
+                for (let j = 1; j <= 3; j++) {
+                    row += `${i}x${j}=${i*j} `;
+                }
+                console.log(row);
+            }
+        }
+
+        function demoWhileLoops() {
+            clearOutput();
+            console.log("=== 🔄 While循环演示 ===\n");
+            
+            // 基本 while 循环
+            console.log("1. 基本 while 循环:");
+            let count = 1;
+            while (count <= 3) {
+                console.log(`  计数: ${count}`);
+                count++;
+            }
+            
+            // do...while 循环
+            console.log("\n2. do...while 循环:");
+            let num = 1;
+            do {
+                console.log(`  至少执行一次: ${num}`);
+                num++;
+            } while (num <= 2);
+            
+            // 实际应用：查找数组元素
+            console.log("\n3. 查找数组元素:");
+            const numbers = [1, 3, 5, 8, 9, 11];
+            let index = 0;
+            let found = false;
+            
+            while (index < numbers.length && !found) {
+                if (numbers[index] % 2 === 0) {
+                    console.log(`  找到第一个偶数: ${numbers[index]}，位置: ${index}`);
+                    found = true;
+                } else {
+                    console.log(`  检查 ${numbers[index]} - 不是偶数`);
+                }
+                index++;
+            }
+        }
+
+        function demoModernLoops() {
+            clearOutput();
+            console.log("=== 🆕 现代循环语法演示 ===\n");
+            
+            // for...of 循环
+            console.log("1. for...of 循环 (遍历值):");
+            const colors = ["红色", "绿色", "蓝色"];
+            for (const color of colors) {
+                console.log(`  颜色: ${color}`);
+            }
+            
+            // for...in 循环
+            console.log("\n2. for...in 循环 (遍历属性):");
+            const person = { name: "张三", age: 25, city: "北京" };
+            for (const key in person) {
+                console.log(`  ${key}: ${person[key]}`);
+            }
+            
+            // Array.forEach()
+            console.log("\n3. Array.forEach 方法:");
+            const numbers = [1, 2, 3, 4, 5];
+            numbers.forEach((num, index) => {
+                console.log(`  索引${index}: ${num} -> ${num * 2}`);
+            });
+            
+            // Array.map() 和其他方法
+            console.log("\n4. 函数式循环方法:");
+            const doubled = numbers.map(n => n * 2);
+            const evens = numbers.filter(n => n % 2 === 0);
+            const sum = numbers.reduce((acc, n) => acc + n, 0);
+            
+            console.log(`  原数组: [${numbers}]`);
+            console.log(`  翻倍: [${doubled}]`);
+            console.log(`  偶数: [${evens}]`);
+            console.log(`  求和: ${sum}`);
+        }
+
+        // 交互式功能
+        function gradeScore() {
+            const score = parseInt(document.getElementById('scoreInput').value);
+            const resultDiv = document.getElementById('gradeResult');
+            
+            let grade, color, message;
+            
+            if (isNaN(score) || score < 0 || score > 100) {
+                grade = "输入错误";
+                color = "#f44336";
+                message = "请输入0-100之间的有效分数";
+            } else if (score >= 90) {
+                grade = "A (优秀)";
+                color = "#4caf50";
+                message = "太棒了！继续保持！";
+            } else if (score >= 80) {
+                grade = "B (良好)";
+                color = "#8bc34a";
+                message = "很不错，再努力一点就是优秀了！";
+            } else if (score >= 70) {
+                grade = "C (中等)";
+                color = "#ff9800";
+                message = "还可以，需要更加努力！";
+            } else if (score >= 60) {
+                grade = "D (及格)";
+                color = "#ff5722";
+                message = "刚好及格，要加油了！";
+            } else {
+                grade = "F (不及格)";
+                color = "#f44336";
+                message = "需要重新学习，不要放弃！";
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.style.borderColor = color;
+            resultDiv.innerHTML = `
+                <strong>分数：${score}</strong><br>
+                <strong style="color: ${color}">等级：${grade}</strong><br>
+                <em>${message}</em>
+            `;
+        }
+
+        function makeGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            const resultDiv = document.getElementById('guessResult');
+            const progressFill = document.getElementById('progressFill');
+            const attemptsDisplay = document.getElementById('attemptsDisplay');
+            
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                resultDiv.innerHTML = '<span style="color: red;">请输入1-100之间的数字</span>';
+                return;
+            }
+            
+            attempts++;
+            const progress = (attempts / maxAttempts) * 100;
+            progressFill.style.width = progress + '%';
+            attemptsDisplay.textContent = `尝试次数: ${attempts}/${maxAttempts}`;
+            
+            if (guess === targetNumber) {
+                resultDiv.innerHTML = `<span style="color: green; font-size: 18px;">🎉 恭喜！你用了${attempts}次猜中了数字${targetNumber}！</span>`;
+                document.getElementById('guessInput').disabled = true;
+            } else if (attempts >= maxAttempts) {
+                resultDiv.innerHTML = `<span style="color: red;">😢 游戏结束！答案是${targetNumber}，点击"新游戏"重新开始</span>`;
+                document.getElementById('guessInput').disabled = true;
+            } else {
+                const hint = guess < targetNumber ? "太小了，往大了猜" : "太大了，往小了猜";
+                resultDiv.innerHTML = `<span style="color: orange;">${hint} (剩余${maxAttempts - attempts}次机会)</span>`;
+            }
+            
+            document.getElementById('guessInput').value = '';
+        }
+
+        function startNewGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('guessInput').disabled = false;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessResult').innerHTML = '';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('attemptsDisplay').textContent = '尝试次数: 0/10';
+        }
+
+        function addToCart() {
+            const name = document.getElementById('itemName').value;
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const quantity = parseInt(document.getElementById('itemQuantity').value);
+            
+            if (name && !isNaN(price) && !isNaN(quantity) && price > 0 && quantity > 0) {
+                cart.push({ name, price, quantity });
+                updateCartDisplay();
+                
+                // 清空输入框
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemPrice').value = '';
+                document.getElementById('itemQuantity').value = '1';
+            } else {
+                alert('请填写完整且有效的商品信息');
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartDiv = document.getElementById('cartDisplay');
+            
+            if (cart.length === 0) {
+                cartDiv.innerHTML = '<p>购物车为空</p>';
+                return;
+            }
+            
+            let total = 0;
+            let html = '<h5>购物车内容：</h5><ul>';
+            
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                html += `<li>${item.name} - ¥${item.price} x ${item.quantity} = ¥${subtotal.toFixed(2)}</li>`;
+            });
+            
+            html += '</ul>';
+            html += `<strong>总计：¥${total.toFixed(2)}</strong>`;
+            cartDiv.innerHTML = html;
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartDisplay();
+        }
+
+        function generatePattern() {
+            const patternType = document.getElementById('patternType').value;
+            const count = parseInt(document.getElementById('patternCount').value);
+            const resultDiv = document.getElementById('patternResult');
+            
+            let result = [];
+            
+            switch (patternType) {
+                case 'even':
+                    for (let i = 0; i < count; i++) {
+                        result.push((i + 1) * 2);
+                    }
+                    break;
+                    
+                case 'odd':
+                    for (let i = 0; i < count; i++) {
+                        result.push(i * 2 + 1);
+                    }
+                    break;
+                    
+                case 'fibonacci':
+                    if (count >= 1) result.push(0);
+                    if (count >= 2) result.push(1);
+                    for (let i = 2; i < count; i++) {
+                        result.push(result[i-1] + result[i-2]);
+                    }
+                    break;
+                    
+                case 'prime':
+                    let num = 2;
+                    while (result.length < count) {
+                        if (isPrime(num)) {
+                            result.push(num);
+                        }
+                        num++;
+                    }
+                    break;
+                    
+                case 'multiplication':
+                    const size = Math.min(count, 9);
+                    resultDiv.innerHTML = '<h5>乘法表：</h5>';
+                    for (let i = 1; i <= size; i++) {
+                        let row = '';
+                        for (let j = 1; j <= size; j++) {
+                            row += `${i}×${j}=${i*j} `;
+                        }
+                        resultDiv.innerHTML += `<div>${row}</div>`;
+                    }
+                    return;
+            }
+            
+            resultDiv.innerHTML = `<h5>${getPatternName(patternType)}：</h5><div>[${result.join(', ')}]</div>`;
+        }
+
+        function isPrime(n) {
+            if (n < 2) return false;
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        function getPatternName(type) {
+            const names = {
+                'even': '偶数序列',
+                'odd': '奇数序列',
+                'fibonacci': '斐波那契数列',
+                'prime': '质数序列'
+            };
+            return names[type] || type;
+        }
+
+        function clearOutput() {
+            outputDiv.innerHTML = '';
+        }
+
+        function clearConsole() {
+            clearOutput();
+            console.log("🎉 输出已清空，准备新的学习！");
+        }
+
+        // 初始化
+        console.log("🎉 欢迎来到条件判断与循环大师课！");
+        console.log("点击按钮开始探索程序控制流程的奥秘...");
+        updateCartDisplay();
+    </script>
+</body>
+</html>
