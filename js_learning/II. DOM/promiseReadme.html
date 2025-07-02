@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise 和异步编程流程说明</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .flow-chart {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 14px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .explanation {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            background-color: #f8f9fa;
+        }
+        h2 {
+            color: #007acc;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .lifecycle {
+            background: #e6f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Promise 和异步编程流程说明</h1>
+        
+        <h2>1. 页面生命周期流程</h2>
+        <div class="lifecycle">
+            <h3>页面加载过程：</h3>
+            <pre>
+1. 浏览器加载 HTML
+   └─> 解析 DOM 结构
+       └─> 应用 CSS 样式
+           └─> 执行脚本标签中的 JavaScript 代码
+               └─> 执行 getNewWeather() 函数（自动调用）
+
+2. getNewWeather() 函数执行流程：
+   ├─> 获取所有需要的 DOM 元素
+   ├─> 显示"加载中"状态
+   ├─> 清空错误提示
+   ├─> 开始异步请求
+   └─> 等待数据返回
+</pre>
+        </div>
+
+        <h2>2. 数据刷新流程图</h2>
+        <div class="flow-chart">
+数据获取与显示流程：
+
+┌─────────────┐     ┌──────────────┐     ┌──────────────┐     ┌─────────────┐
+│页面加载完成 │     │ 显示加载状态 │     │ 发起异步请求 │     │ 等待响应... │
+└──────┬──────┘     └──────┬───────┘     └──────┬───────┘     └──────┬──────┘
+       │                   │                    │                     │
+       └───────────────────┴────────────────────┴─────────────────┐  │
+                                                                  │  │
+       ┌─────────────────────────────────────────────────────┐    │  │
+       │                                                     │    │  │
+       │                   成功 (90%)                        ▼    ▼  │
+┌──────▼──────┐     ┌──────────────┐     ┌──────────────┐  ┌─────────┐
+│ 解析天气数据│     │ 更新DOM显示  │     │ 隐藏错误提示 │  │ Promise │
+└──────┬──────┘     └──────┬───────┘     └──────┬───────┘  └────┬────┘
+       │                   │                    │                │
+       └───────────────────┴────────────────────┘                │
+                                                                 │
+       ┌─────────────────────────────────────────────────────┐   │
+       │                   失败 (10%)                        ▼   │
+┌──────▼──────┐     ┌──────────────┐     ┌──────────────┐      │
+│显示错误信息 │     │清空天气数据  │     │显示错误状态  │      │
+└─────────────┘     └──────────────┘     └──────────────┘      │
+       ▲                                                        │
+       └────────────────────────────────────────────────────────┘</div>
+
+        <h2>3. 自动刷新实现说明</h2>
+        <div class="explanation">
+            <h3>为什么页面加载就会刷新？</h3>
+            <ol>
+                <li><strong>脚本位置：</strong>在HTML底部引入JavaScript文件，确保DOM已经加载完成</li>
+                <li><strong>自动调用：</strong>在脚本末尾直接调用 getNewWeather() 函数</li>
+                <li><strong>初始化时机：</strong>页面加载完成后立即执行，保证用户看到内容</li>
+            </ol>
+
+            <h3>代码实现：</h3>
+            <pre>
+// HTML中的脚本引入
+&lt;script&gt;
+    // ...其他代码...
+
+    // 页面加载完成后自动执行
+    getNewWeather();
+&lt;/script&gt;</pre>
+        </div>
+
+        <h2>4. Promise 详细说明</h2>
+        <div class="explanation">
+            <h3>Promise 状态</h3>
+            <ul>
+                <li><strong>Pending（等待中）：</strong>初始状态，正在执行异步操作</li>
+                <li><strong>Fulfilled（已完成）：</strong>操作成功完成，调用 resolve</li>
+                <li><strong>Rejected（已拒绝）：</strong>操作失败，调用 reject</li>
+            </ul>
+
+            <h3>async/await 使用</h3>
+            <ul>
+                <li><strong>async：</strong>标记函数为异步函数，允许使用 await</li>
+                <li><strong>await：</strong>暂停执行，等待 Promise 完成</li>
+                <li><strong>错误处理：</strong>使用 try/catch 捕获异步操作的错误</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>最佳实践</h3>
+            <ul>
+                <li>总是显示加载状态，提升用户体验</li>
+                <li>使用 try/catch 处理所有可能的错误</li>
+                <li>在 finally 中清理加载状态</li>
+                <li>合理使用 Promise 和 async/await</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

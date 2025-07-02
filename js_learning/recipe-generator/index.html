@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃什么 - 随机菜谱生成器</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #recipe-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #recipe-name {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #f1c40f;
+            padding-bottom: 10px;
+        }
+        #recipe-img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #recipe-category {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        #recipe-area {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .recipe-meta {
+            margin-bottom: 20px;
+        }
+        #recipe-instructions {
+            line-height: 1.7;
+            color: #333;
+        }
+        #ingredients-list {
+            columns: 2;
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        .section-title {
+            color: #e67e22;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        button {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e67e22;
+            color: white;
+        }
+        #loading {
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+            color: #7f8c8d;
+            display: none;
+        }
+        #error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍳 今天吃什么？</h1>
+    
+    <div id="error"></div>
+    <div id="loading">正在寻找美食灵感...</div>
+    
+    <div id="recipe-container">
+        <h2 id="recipe-name">加载中...</h2>
+        <div class="recipe-meta">
+            <span id="recipe-category"></span>
+            <span id="recipe-area"></span>
+        </div>
+        <img id="recipe-img" src="" alt="菜谱图片" width="300">
+        
+        <h3 class="section-title">食材</h3>
+        <ul id="ingredients-list"></ul>
+        
+        <h3 class="section-title">做法</h3>
+        <p id="recipe-instructions"></p>
+    </div>
+    
+    <button id="new-recipe-btn">🍽️ 换一道菜</button>
+
+    <script src="app.js"></script>
+</body>
+</html>

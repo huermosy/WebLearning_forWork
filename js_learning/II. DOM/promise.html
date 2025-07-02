@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise 和 Fetch 示例</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .weather-container {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            background-color: #f8f9fa;
+        }
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .error {
+            color: red;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 5px;
+            display: none;
+        }
+        .weather-icon {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Promise 和 Fetch 示例 - 天气预报</h1>
+        <p style="margin-bottom: 20px;">
+            这是一个使用Promise和异步编程的示例。查看 
+            <a href="promiseReadme.html" target="_blank">详细说明文档</a> 
+            了解完整的程序流程。
+        </p>
+        
+        <div class="weather-container">
+            <h3>今日天气：<span id="city">加载中...</span></h3>
+            <div class="weather-icon" id="weather-icon"></div>
+            <p>温度：<span id="temperature">--</span>℃</p>
+            <p>天气：<span id="weather">--</span></p>
+            <p>风向：<span id="wind">--</span></p>
+        </div>
+
+        <button onclick="getNewWeather()">刷新天气</button>
+        <div id="error" class="error">获取天气信息时出错了！</div>
+    </div>
+
+    <script>
+        // 模拟天气数据
+        const weatherData = [
+            {
+                city: "北京",
+                temperature: 28,
+                weather: "晴",
+                wind: "东北风 3级",
+                icon: "☀️"
+            },
+            {
+                city: "上海",
+                temperature: 26,
+                weather: "多云",
+                wind: "东风 2级",
+                icon: "⛅"
+            },
+            {
+                city: "广州",
+                temperature: 30,
+                weather: "雷阵雨",
+                wind: "南风 4级",
+                icon: "⛈️"
+            },
+            {
+                city: "深圳",
+                temperature: 29,
+                weather: "小雨",
+                wind: "东南风 3级",
+                icon: "🌧️"
+            }
+        ];
+
+        // 模拟异步请求
+        function mockFetch() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // 随机获取一个天气数据
+                    const randomIndex = Math.floor(Math.random() * weatherData.length);
+                    const data = weatherData[randomIndex];
+                    
+                    if (Math.random() > 0.1) { // 90%的概率成功
+                        resolve(data);
+                    } else {
+                        reject(new Error('网络请求失败'));
+                    }
+                }, 1000); // 模拟网络延迟
+            });
+        }
+
+        // 获取并显示天气的函数
+        async function getNewWeather() {
+            const cityEl = document.querySelector('#city');
+            const temperatureEl = document.querySelector('#temperature');
+            const weatherEl = document.querySelector('#weather');
+            const windEl = document.querySelector('#wind');
+            const weatherIconEl = document.querySelector('#weather-icon');
+            const errorEl = document.querySelector('#error');
+
+            try {
+                // 显示加载状态
+                cityEl.textContent = '加载中...';
+                temperatureEl.textContent = '--';
+                weatherEl.textContent = '--';
+                windEl.textContent = '--';
+                weatherIconEl.textContent = '';
+                errorEl.style.display = 'none';
+
+                // 使用模拟的fetch获取天气
+                const data = await mockFetch();
+
+                // 显示天气信息
+                cityEl.textContent = data.city;
+                temperatureEl.textContent = data.temperature;
+                weatherEl.textContent = data.weather;
+                windEl.textContent = data.wind;
+                weatherIconEl.textContent = data.icon;
+
+            } catch (error) {
+                // 显示错误信息
+                errorEl.style.display = 'block';
+                errorEl.textContent = '获取天气信息时出错了：' + error.message;
+                cityEl.textContent = '--';
+                temperatureEl.textContent = '--';
+                weatherEl.textContent = '--';
+                windEl.textContent = '--';
+                weatherIconEl.textContent = '';
+            }
+        }
+
+        // 页面加载时自动获取天气
+        // getNewWeather();
+    </script>
+</body>
+</html>
