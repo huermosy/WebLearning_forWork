@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Hooks 深度学习</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .demo-title {
+            color: #1976d2;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .demo-title::before {
+            content: "🎯";
+            margin-right: 10px;
+        }
+        
+        .hook-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        input[type="text"], input[type="number"], textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .counter-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 10px;
+        }
+        
+        .user-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .timer-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .theme-dark {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .theme-light {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .tip {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚛️ React Hooks 完全指南</h1>
+        
+        <div class="tip">
+            <strong>💡 学习提示：</strong>
+            Hooks是React 16.8引入的新特性，让函数组件拥有了类组件的所有能力。
+            通过Hooks，我们可以在函数组件中使用状态、生命周期方法等功能。
+        </div>
+
+        <!-- useState Hook 演示 -->
+        <div class="demo-section">
+            <div class="demo-title">useState - 状态管理的基石</div>
+            <div class="grid">
+                <!-- 基础计数器 -->
+                <div class="hook-demo">
+                    <h4>🔢 基础计数器</h4>
+                    <div id="counter-demo"></div>
+                    <pre><code>const [count, setCount] = useState(0);
+
+const increment = () => setCount(count + 1);
+const decrement = () => setCount(count - 1);
+const reset = () => setCount(0);</code></pre>
+                </div>
+                
+                <!-- 表单输入 -->
+                <div class="hook-demo">
+                    <h4>📝 表单输入处理</h4>
+                    <div id="form-demo"></div>
+                    <pre><code>const [name, setName] = useState('');
+const [email, setEmail] = useState('');</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- useEffect Hook 演示 -->
+        <div class="demo-section">
+            <div class="demo-title">useEffect - 副作用处理专家</div>
+            <div class="grid">
+                <!-- 文档标题同步 -->
+                <div class="hook-demo">
+                    <h4>📄 文档标题同步</h4>
+                    <div id="title-sync-demo"></div>
+                    <pre><code>useEffect(() => {
+  document.title = `计数: ${count}`;
+}, [count]); // 依赖数组</code></pre>
+                </div>
+                
+                <!-- 数据获取 -->
+                <div class="hook-demo">
+                    <h4>🌐 数据获取</h4>
+                    <div id="data-fetch-demo"></div>
+                    <pre><code>useEffect(() => {
+  fetch('/api/user')
+    .then(res => res.json())
+    .then(setUser);
+}, []); // 空依赖数组，只在组件挂载时执行</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 自定义Hooks演示 -->
+        <div class="demo-section">
+            <div class="demo-title">自定义Hooks - 逻辑复用的艺术</div>
+            <div class="grid">
+                <!-- 计时器Hook -->
+                <div class="hook-demo">
+                    <h4>⏰ 计时器Hook</h4>
+                    <div id="timer-demo"></div>
+                    <pre><code>function useTimer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  
+  useEffect(() => {
+    let interval = null;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setSeconds(s => s + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning]);
+  
+  return { seconds, isRunning, start, stop, reset };
+}</code></pre>
+                </div>
+                
+                <!-- 本地存储Hook -->
+                <div class="hook-demo">
+                    <h4>💾 本地存储Hook</h4>
+                    <div id="localstorage-demo"></div>
+                    <pre><code>function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      return initialValue;
+    }
+  });
+  
+  const setStoredValue = (value) => {
+    setValue(value);
+    window.localStorage.setItem(key, JSON.stringify(value));
+  };
+  
+  return [value, setStoredValue];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 其他重要Hooks -->
+        <div class="demo-section">
+            <div class="demo-title">其他重要Hooks</div>
+            <div class="grid">
+                <!-- useReducer -->
+                <div class="hook-demo">
+                    <h4>🔄 useReducer - 复杂状态管理</h4>
+                    <div id="reducer-demo"></div>
+                    <pre><code>const todoReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD':
+      return [...state, { id: Date.now(), text: action.text }];
+    case 'DELETE':
+      return state.filter(todo => todo.id !== action.id);
+    default:
+      return state;
+  }
+};
+
+const [todos, dispatch] = useReducer(todoReducer, []);</code></pre>
+                </div>
+                
+                <!-- useContext -->
+                <div class="hook-demo">
+                    <h4>🌐 useContext - 全局状态</h4>
+                    <div id="context-demo"></div>
+                    <pre><code>const ThemeContext = React.createContext();
+
+function App() {
+  const [theme, setTheme] = useState('light');
+  return (
+    &lt;ThemeContext.Provider value={{theme, setTheme}}&gt;
+      &lt;ChildComponent /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+function ChildComponent() {
+  const {theme, setTheme} = useContext(ThemeContext);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实战项目 -->
+        <div class="demo-section">
+            <div class="demo-title">实战项目 - 完整的Todo应用</div>
+            <div class="hook-demo">
+                <div id="todo-app"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useReducer, useContext, createContext } = React;
+
+        // 1. 基础计数器组件
+        function Counter() {
+            const [count, setCount] = useState(0);
+
+            return (
+                <div>
+                    <div className="counter-display">{count}</div>
+                    <button onClick={() => setCount(count + 1)}>➕ 增加</button>
+                    <button onClick={() => setCount(count - 1)}>➖ 减少</button>
+                    <button onClick={() => setCount(0)}>🔄 重置</button>
+                </div>
+            );
+        }
+
+        // 2. 表单演示组件
+        function FormDemo() {
+            const [name, setName] = useState('');
+            const [email, setEmail] = useState('');
+
+            return (
+                <div>
+                    <div>
+                        <input 
+                            type="text" 
+                            placeholder="输入姓名"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <input 
+                            type="text" 
+                            placeholder="输入邮箱"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div style={{marginTop: '15px', padding: '10px', background: '#f8f9fa', borderRadius: '5px'}}>
+                        <strong>实时预览：</strong><br/>
+                        姓名: {name || '未输入'}<br/>
+                        邮箱: {email || '未输入'}
+                    </div>
+                </div>
+            );
+        }
+
+        // 3. 标题同步组件
+        function TitleSync() {
+            const [count, setCount] = useState(0);
+
+            useEffect(() => {
+                document.title = `React Hooks学习 - 计数: ${count}`;
+                return () => {
+                    document.title = 'React Hooks 深度学习';
+                };
+            }, [count]);
+
+            return (
+                <div>
+                    <p>当前计数: <span className="highlight">{count}</span></p>
+                    <p>注意看浏览器标签页标题的变化！</p>
+                    <button onClick={() => setCount(count + 1)}>增加计数</button>
+                    <button onClick={() => setCount(0)}>重置</button>
+                </div>
+            );
+        }
+
+        // 4. 数据获取组件
+        function DataFetch() {
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState(null);
+
+            const fetchUser = async () => {
+                setLoading(true);
+                setError(null);
+                try {
+                    // 模拟API调用
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    if (Math.random() > 0.7) {
+                        throw new Error('网络请求失败');
+                    }
+                    setUser({
+                        id: Math.floor(Math.random() * 1000),
+                        name: '张三',
+                        email: 'zhangsan@example.com',
+                        avatar: '👨‍💻'
+                    });
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            useEffect(() => {
+                fetchUser();
+            }, []);
+
+            if (loading) return <div className="loading">🔄 加载中...</div>;
+            if (error) return <div className="error">❌ {error}</div>;
+
+            return (
+                <div>
+                    {user ? (
+                        <div className="user-card">
+                            <div style={{fontSize: '2em', marginBottom: '10px'}}>{user.avatar}</div>
+                            <h4>{user.name}</h4>
+                            <p>ID: {user.id}</p>
+                            <p>📧 {user.email}</p>
+                        </div>
+                    ) : (
+                        <p>无用户数据</p>
+                    )}
+                    <button onClick={fetchUser}>🔄 重新获取</button>
+                </div>
+            );
+        }
+
+        // 5. 自定义Timer Hook
+        function useTimer() {
+            const [seconds, setSeconds] = useState(0);
+            const [isRunning, setIsRunning] = useState(false);
+
+            useEffect(() => {
+                let interval = null;
+                if (isRunning) {
+                    interval = setInterval(() => {
+                        setSeconds(seconds => seconds + 1);
+                    }, 1000);
+                } else if (!isRunning && seconds !== 0) {
+                    clearInterval(interval);
+                }
+                return () => clearInterval(interval);
+            }, [isRunning, seconds]);
+
+            const start = () => setIsRunning(true);
+            const stop = () => setIsRunning(false);
+            const reset = () => {
+                setSeconds(0);
+                setIsRunning(false);
+            };
+
+            return { seconds, isRunning, start, stop, reset };
+        }
+
+        function TimerComponent() {
+            const { seconds, isRunning, start, stop, reset } = useTimer();
+
+            const formatTime = (secs) => {
+                const mins = Math.floor(secs / 60);
+                const remainingSecs = secs % 60;
+                return `${mins.toString().padStart(2, '0')}:${remainingSecs.toString().padStart(2, '0')}`;
+            };
+
+            return (
+                <div>
+                    <div className="timer-display">{formatTime(seconds)}</div>
+                    <button onClick={start} disabled={isRunning}>▶️ 开始</button>
+                    <button onClick={stop} disabled={!isRunning}>⏸️ 暂停</button>
+                    <button onClick={reset}>🔄 重置</button>
+                </div>
+            );
+        }
+
+        // 6. 自定义LocalStorage Hook
+        function useLocalStorage(key, initialValue) {
+            const [storedValue, setStoredValue] = useState(() => {
+                try {
+                    const item = window.localStorage.getItem(key);
+                    return item ? JSON.parse(item) : initialValue;
+                } catch (error) {
+                    console.error(`Error reading localStorage key "${key}":`, error);
+                    return initialValue;
+                }
+            });
+
+            const setValue = (value) => {
+                try {
+                    setStoredValue(value);
+                    window.localStorage.setItem(key, JSON.stringify(value));
+                } catch (error) {
+                    console.error(`Error setting localStorage key "${key}":`, error);
+                }
+            };
+
+            return [storedValue, setValue];
+        }
+
+        function LocalStorageDemo() {
+            const [name, setName] = useLocalStorage('user-name', '');
+            const [theme, setTheme] = useLocalStorage('app-theme', 'light');
+
+            return (
+                <div>
+                    <div>
+                        <input
+                            type="text"
+                            placeholder="输入你的名字"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        <p>👋 你好, {name || '匿名用户'}!</p>
+                    </div>
+                    <div>
+                        <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                            🌓 切换主题 (当前: {theme})
+                        </button>
+                    </div>
+                    <p style={{fontSize: '0.9em', color: '#666'}}>
+                        💾 数据已自动保存到localStorage，刷新页面试试！
+                    </p>
+                </div>
+            );
+        }
+
+        // 7. useReducer演示
+        function todoReducer(state, action) {
+            switch (action.type) {
+                case 'ADD':
+                    return [...state, { 
+                        id: Date.now(), 
+                        text: action.text, 
+                        completed: false 
+                    }];
+                case 'TOGGLE':
+                    return state.map(todo =>
+                        todo.id === action.id 
+                            ? { ...todo, completed: !todo.completed }
+                            : todo
+                    );
+                case 'DELETE':
+                    return state.filter(todo => todo.id !== action.id);
+                default:
+                    return state;
+            }
+        }
+
+        function ReducerDemo() {
+            const [todos, dispatch] = useReducer(todoReducer, []);
+            const [inputText, setInputText] = useState('');
+
+            const addTodo = () => {
+                if (inputText.trim()) {
+                    dispatch({ type: 'ADD', text: inputText });
+                    setInputText('');
+                }
+            };
+
+            return (
+                <div>
+                    <div style={{marginBottom: '15px'}}>
+                        <input
+                            type="text"
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            placeholder="输入待办事项"
+                            onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+                        />
+                        <button onClick={addTodo}>➕ 添加</button>
+                    </div>
+                    <div>
+                        {todos.map(todo => (
+                            <div key={todo.id} style={{
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                margin: '8px 0',
+                                padding: '8px',
+                                background: todo.completed ? '#d4edda' : '#fff3cd',
+                                borderRadius: '5px'
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    checked={todo.completed}
+                                    onChange={() => dispatch({ type: 'TOGGLE', id: todo.id })}
+                                    style={{marginRight: '10px'}}
+                                />
+                                <span style={{
+                                    textDecoration: todo.completed ? 'line-through' : 'none',
+                                    flex: 1
+                                }}>
+                                    {todo.text}
+                                </span>
+                                <button onClick={() => dispatch({ type: 'DELETE', id: todo.id })}>
+                                    🗑️
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 8. Context演示
+        const ThemeContext = createContext();
+
+        function ThemeProvider({ children }) {
+            const [theme, setTheme] = useState('light');
+            
+            return (
+                <ThemeContext.Provider value={{ theme, setTheme }}>
+                    {children}
+                </ThemeContext.Provider>
+            );
+        }
+
+        function ThemedComponent() {
+            const { theme, setTheme } = useContext(ThemeContext);
+            
+            return (
+                <div className={`theme-${theme}`} style={{
+                    padding: '20px',
+                    borderRadius: '10px',
+                    textAlign: 'center'
+                }}>
+                    <h4>当前主题: {theme}</h4>
+                    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                        🌓 切换主题
+                    </button>
+                </div>
+            );
+        }
+
+        function ContextDemo() {
+            return (
+                <ThemeProvider>
+                    <ThemedComponent />
+                </ThemeProvider>
+            );
+        }
+
+        // 9. 完整Todo应用
+        function TodoApp() {
+            const [todos, setTodos] = useState([]);
+            const [filter, setFilter] = useState('all');
+            const [inputText, setInputText] = useState('');
+
+            const addTodo = () => {
+                if (inputText.trim()) {
+                    setTodos([...todos, {
+                        id: Date.now(),
+                        text: inputText,
+                        completed: false,
+                        createdAt: new Date().toLocaleString()
+                    }]);
+                    setInputText('');
+                }
+            };
+
+            const toggleTodo = (id) => {
+                setTodos(todos.map(todo =>
+                    todo.id === id ? { ...todo, completed: !todo.completed } : todo
+                ));
+            };
+
+            const deleteTodo = (id) => {
+                setTodos(todos.filter(todo => todo.id !== id));
+            };
+
+            const filteredTodos = todos.filter(todo => {
+                if (filter === 'active') return !todo.completed;
+                if (filter === 'completed') return todo.completed;
+                return true;
+            });
+
+            const stats = {
+                total: todos.length,
+                completed: todos.filter(t => t.completed).length,
+                active: todos.filter(t => !t.completed).length
+            };
+
+            return (
+                <div style={{maxWidth: '600px', margin: '0 auto'}}>
+                    <h3 style={{textAlign: 'center', color: '#2c3e50'}}>📝 我的待办清单</h3>
+                    
+                    {/* 输入区域 */}
+                    <div style={{marginBottom: '20px'}}>
+                        <input
+                            type="text"
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            placeholder="今天要做什么？"
+                            onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+                            style={{width: '70%'}}
+                        />
+                        <button onClick={addTodo} style={{marginLeft: '10px'}}>
+                            ➕ 添加
+                        </button>
+                    </div>
+
+                    {/* 过滤器 */}
+                    <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                        {['all', 'active', 'completed'].map(f => (
+                            <button
+                                key={f}
+                                onClick={() => setFilter(f)}
+                                style={{
+                                    background: filter === f ? '#667eea' : '#f8f9fa',
+                                    color: filter === f ? 'white' : '#333',
+                                    margin: '0 5px'
+                                }}
+                            >
+                                {f === 'all' ? '全部' : f === 'active' ? '进行中' : '已完成'}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* 统计信息 */}
+                    <div style={{
+                        background: '#f8f9fa',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        marginBottom: '20px',
+                        textAlign: 'center'
+                    }}>
+                        总计: {stats.total} | 进行中: {stats.active} | 已完成: {stats.completed}
+                    </div>
+
+                    {/* 待办列表 */}
+                    <div>
+                        {filteredTodos.length === 0 ? (
+                            <div style={{textAlign: 'center', color: '#666', padding: '20px'}}>
+                                {filter === 'all' ? '🎉 没有待办事项' : 
+                                 filter === 'active' ? '✅ 没有进行中的任务' : 
+                                 '📋 没有已完成的任务'}
+                            </div>
+                        ) : (
+                            filteredTodos.map(todo => (
+                                <div key={todo.id} style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '15px',
+                                    margin: '10px 0',
+                                    background: todo.completed ? '#d4edda' : 'white',
+                                    borderRadius: '8px',
+                                    border: '1px solid #ddd',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={todo.completed}
+                                        onChange={() => toggleTodo(todo.id)}
+                                        style={{marginRight: '15px', transform: 'scale(1.2)'}}
+                                    />
+                                    <div style={{flex: 1}}>
+                                        <div style={{
+                                            textDecoration: todo.completed ? 'line-through' : 'none',
+                                            fontSize: '16px',
+                                            marginBottom: '5px'
+                                        }}>
+                                            {todo.text}
+                                        </div>
+                                        <div style={{fontSize: '12px', color: '#666'}}>
+                                            创建于: {todo.createdAt}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => deleteTodo(todo.id)}
+                                        style={{
+                                            background: '#e74c3c',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '5px',
+                                            padding: '5px 10px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        🗑️
+                                    </button>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // 渲染所有组件
+        ReactDOM.render(<Counter />, document.getElementById('counter-demo'));
+        ReactDOM.render(<FormDemo />, document.getElementById('form-demo'));
+        ReactDOM.render(<TitleSync />, document.getElementById('title-sync-demo'));
+        ReactDOM.render(<DataFetch />, document.getElementById('data-fetch-demo'));
+        ReactDOM.render(<TimerComponent />, document.getElementById('timer-demo'));
+        ReactDOM.render(<LocalStorageDemo />, document.getElementById('localstorage-demo'));
+        ReactDOM.render(<ReducerDemo />, document.getElementById('reducer-demo'));
+        ReactDOM.render(<ContextDemo />, document.getElementById('context-demo'));
+        ReactDOM.render(<TodoApp />, document.getElementById('todo-app'));
+    </script>
+</body>
+</html>
