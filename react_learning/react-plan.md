@@ -28,10 +28,11 @@
   npm run dev
   ```
   浏览器会自动打开一个本地网址，看到 React 的 Logo 就说明成功了！
+  ![alt text](image.png)
 
 #### 3. JSX 与函数组件
 - **JSX**：是 JavaScript 的扩展语法，让你能在 JS 文件里像写 HTML 一样写界面。
-- **函数组件**：就是一个返回 JSX 的 JavaScript 函数。组件名的首字母必须大写！
+- **函数组件**：就是一个返回 JSX 的 JavaScript 函数。组件名的首字母必须大写！为了和HTML标签区分，该标签是小写。
 
 #### 4. Props：给组件传递信息
 - **Props** (Properties) 就像函数的参数，允许你从父组件向子组件传递数据。

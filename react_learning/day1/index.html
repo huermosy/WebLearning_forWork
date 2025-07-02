@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Day 1 - 问候语组件</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2b6cb0;
+            border-bottom: 2px solid #bee3f8;
+            padding-bottom: 10px;
+        }
+        .greeting {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ebf8ff;
+            border-left: 4px solid #4299e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>React Day 1 - 问候语组件</h1>
+        <div id="root"></div>
+    </div>
+
+    <script type="text/babel" src="app.js"></script>
+</body>
+</html>
