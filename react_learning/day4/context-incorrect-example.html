@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context 错误使用示例</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .mall {
+      border: 2px solid #333;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .floor {
+      border: 2px solid #666;
+      padding: 15px;
+      margin: 10px 0;
+    }
+    .section {
+      border: 2px solid #999;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .store {
+      background-color: #f0f0f0;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    .info {
+      background-color: #ffcccc;
+      border-left: 6px solid #f44336;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .error-box {
+      background-color: #ffebee;
+      border: 1px solid #f44336;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Context 错误使用示例 - 组件名不匹配</h1>
+  <div class="info">
+    <p>这个示例展示了 Context 的错误使用方式，组件名称和使用的标签名称不一致。</p>
+    <p>请查看控制台错误信息：服装区组件未定义，但在JSX中尝试使用。</p>
+  </div>
+  
+  <div id="root"></div>
+  <div id="error-display" class="error-box" style="display:none">
+    <h3>错误信息：</h3>
+    <p id="error-message">请打开浏览器控制台(F12)查看详细错误信息</p>
+  </div>
+
+  <script type="text/babel">
+    // 创建一个 Context
+    const 商场广播 = React.createContext();
+
+    // 错误处理函数
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error: error };
+      }
+
+      componentDidCatch(error, errorInfo) {
+        console.error("组件错误:", error);
+        document.getElementById("error-display").style.display = "block";
+        document.getElementById("error-message").textContent = 
+          "错误：" + error.message + " - 这是因为组件名称不匹配导致的错误";
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="error-box">
+              <h3>组件错误</h3>
+              <p>JSX标签名与组件函数名不匹配，导致React无法找到组件</p>
+              <p>错误信息: {this.state.error && this.state.error.toString()}</p>
+              <p>请检查控制台获取更多信息</p>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+
+    // 商场组件 (顶层组件)
+    function 商场() {
+      // 使用 useState 管理促销信息
+      const [促销信息, set促销信息] = React.useState('全场8折');
+      
+      // 更改促销信息的函数
+      const 更新促销 = () => {
+        if (促销信息 === '全场8折') {
+          set促销信息('限时5折');
+        } else if (促销信息 === '限时5折') {
+          set促销信息('买一送一');
+        } else {
+          set促销信息('全场8折');
+        }
+      };
+
+      return (
+        <div className="mall">
+          <h2>🏬 购物中心</h2>
+          <div className="controls">
+            <button onClick={更新促销}>更新促销活动</button>
+            <span>当前促销: <strong>{促销信息}</strong></span>
+          </div>
+          
+          {/* 使用 Provider 将促销信息提供给所有子组件 */}
+          <商场广播.Provider value={促销信息}>
+            <ErrorBoundary>
+              <一楼 />
+              <二楼 />
+              <三楼 />
+            </ErrorBoundary>
+          </商场广播.Provider>
+        </div>
+      );
+    }
+
+    // 一楼组件
+    function 一楼() {
+      return (
+        <div className="floor">
+          <h3>🏪 一楼</h3>
+          <超市 />
+        </div>
+      );
+    }
+
+    // 二楼组件
+    function 二楼() {
+      return (
+        <div className="floor">
+          <h3>👚 二楼</h3>
+          <div className="section">
+            <h4>服装区</h4>
+            {/* 错误: 这里使用了 服装区 标签，但定义的是 服装店 组件 */}
+            <服装区 />
+          </div>
+        </div>
+      );
+    }
+
+    // 三楼组件
+    function 三楼() {
+      return (
+        <div className="floor">
+          <h3>🍔 三楼</h3>
+          <div className="section">
+            <h4>餐厅区</h4>
+            <餐厅 />
+          </div>
+        </div>
+      );
+    }
+
+    // 超市组件
+    function 超市() {
+      // 使用 useContext 获取促销信息
+      const 当前促销 = React.useContext(商场广播);
+      return (
+        <div className="store">
+          <h5>🛒 大型超市</h5>
+          <p>超市公告：本超市参与<strong>{当前促销}</strong>活动！</p>
+        </div>
+      );
+    }
+
+    // 服装店组件 - 定义为服装店，但上面使用的是服装区标签
+    function 服装店() {
+      // 使用 useContext 获取促销信息
+      const 当前促销 = React.useContext(商场广播);
+      return (
+        <div className="store">
+          <h5>👕 时尚服装店</h5>
+          <p>服装店公告：全店<strong>{当前促销}</strong>，快来选购！</p>
+        </div>
+      );
+    }
+
+    // 餐厅组件
+    function 餐厅() {
+      // 使用 useContext 获取促销信息
+      const 当前促销 = React.useContext(商场广播);
+      return (
+        <div className="store">
+          <h5>🍝 美食餐厅</h5>
+          <p>餐厅特惠：本周<strong>{当前促销}</strong>，欢迎品尝！</p>
+        </div>
+      );
+    }
+
+    // 渲染应用
+    try {
+      ReactDOM.render(<商场 />, document.getElementById('root'));
+    } catch (error) {
+      console.error("渲染错误:", error);
+      document.getElementById("error-display").style.display = "block";
+      document.getElementById("error-message").textContent = "渲染错误：" + error.message;
+    }
+  </script>
+</body>
+</html>
