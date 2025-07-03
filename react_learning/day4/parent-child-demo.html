@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>父子组件通信示例</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      padding: 0;
+      line-height: 1.6;
+    }
+    .parent {
+      border: 2px solid #3498db;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .child {
+      border: 2px solid #e74c3c;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .explanation {
+      background-color: #f9f9f9;
+      border-left: 4px solid #2ecc71;
+      padding: 10px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>React 父子组件通信示例</h1>
+  
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // 1. 子组件接收父组件传递的 props
+    function Child(props) {
+      // 子组件内部的状态
+      const [childMessage, setChildMessage] = React.useState('');
+      
+      // 处理输入变化
+      const handleInputChange = (e) => {
+        setChildMessage(e.target.value);
+      };
+      
+      // 将消息发送给父组件
+      const sendToParent = () => {
+        // 调用父组件传递的函数，将childMessage作为参数
+        props.onMessageSend(childMessage);
+        setChildMessage(''); // 清空输入框
+      };
+      
+      return (
+        <div className="child">
+          <h3>子组件</h3>
+          <p>从父组件接收的消息: <strong>{props.message}</strong></p>
+          
+          <div>
+            <input 
+              type="text" 
+              value={childMessage}
+              onChange={handleInputChange}
+              placeholder="输入要发送给父组件的消息"
+            />
+            <button onClick={sendToParent}>发送给父组件</button>
+          </div>
+        </div>
+      );
+    }
+
+    // 2. 父组件定义状态和回调函数
+    function Parent() {
+      // 父组件的状态
+      const [parentMessage, setParentMessage] = React.useState('你好，孩子！');
+      const [messageFromChild, setMessageFromChild] = React.useState('(尚未收到消息)');
+      const [inputMessage, setInputMessage] = React.useState('');
+      
+      // 处理从子组件接收的消息
+      const handleMessageFromChild = (message) => {
+        setMessageFromChild(message);
+      };
+      
+      // 更新要发送给子组件的消息
+      const updateMessage = () => {
+        setParentMessage(inputMessage);
+        setInputMessage(''); // 清空输入框
+      };
+
+      return (
+        <div className="parent">
+          <h2>父组件</h2>
+          <p>从子组件接收的消息: <strong>{messageFromChild}</strong></p>
+          
+          <div>
+            <input 
+              type="text" 
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="输入要发送给子组件的消息"
+            />
+            <button onClick={updateMessage}>发送给子组件</button>
+          </div>
+          
+          {/* 通过props向子组件传递数据和函数 */}
+          <Child 
+            message={parentMessage} 
+            onMessageSend={handleMessageFromChild} 
+          />
+        </div>
+      );
+    }
+
+    // 渲染应用
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<Parent />);
+  </script>
+
+  <div class="explanation">
+    <h3>代码解析</h3>
+    <h4>父传子：</h4>
+    <p><code>&lt;Child message={parentMessage} /&gt;</code> - 父组件通过 props 传递 message 数据给子组件</p>
+    <p>子组件通过 <code>props.message</code> 接收这个数据</p>
+    
+    <h4>子传父：</h4>
+    <p><code>&lt;Child onMessageSend={handleMessageFromChild} /&gt;</code> - 父组件传递一个回调函数给子组件</p>
+    <p>子组件通过调用 <code>props.onMessageSend(childMessage)</code> 将数据发送回父组件</p>
+  </div>
+</body>
+</html>

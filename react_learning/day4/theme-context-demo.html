@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Context 主题切换示例</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .app {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .theme-light {
+      background-color: #fff;
+      color: #333;
+    }
+    .theme-dark {
+      background-color: #333;
+      color: #fff;
+    }
+    .toolbar {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f5f5f5;
+    }
+    .theme-dark .toolbar {
+      background-color: #444;
+    }
+    button.themed-button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .theme-light button.themed-button {
+      background-color: #3498db;
+      color: white;
+    }
+    .theme-dark button.themed-button {
+      background-color: #f39c12;
+      color: #333;
+    }
+    button.toggle-button {
+      padding: 8px 12px;
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .theme-dark button.toggle-button {
+      background-color: #e74c3c;
+    }
+    .component-box {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    .theme-dark .component-box {
+      border-color: #555;
+    }
+    code {
+      background-color: #f8f9fa;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      color: #e74c3c;
+    }
+    .theme-dark code {
+      background-color: #222;
+      color: #f39c12;
+    }
+    .explanation {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    .theme-dark .explanation {
+      background-color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // 1. 创建一个 Context，默认主题是 'light'
+    const ThemeContext = React.createContext('light');
+    
+    // 应用程序的根组件
+    function App() {
+      // 使用 state 来管理主题
+      const [theme, setTheme] = React.useState('light');
+      
+      // 切换主题的函数
+      const toggleTheme = () => {
+        setTheme(theme === 'light' ? 'dark' : 'light');
+      };
+      
+      // 根据当前主题计算额外的类名
+      const themeClass = `theme-${theme}`;
+      
+      return (
+        // 2. 使用 Provider 将 theme 值提供给所有子组件
+        <ThemeContext.Provider value={theme}>
+          <div className={`app ${themeClass}`}>
+            <h1>React Context 主题切换示例</h1>
+            
+            <button className="toggle-button" onClick={toggleTheme}>
+              切换到{theme === 'light' ? '暗' : '亮'}色主题
+            </button>
+            
+            <div className="component-box">
+              <h2>App 组件</h2>
+              <p>当前主题: {theme}</p>
+              
+              {/* 中间层组件 */}
+              <Toolbar />
+            </div>
+            
+            <div className="explanation">
+              <h3>代码原理解析</h3>
+              <p>1. 首先通过 <code>const ThemeContext = React.createContext('light')</code> 创建一个 Context</p>
+              <p>2. 在 App 组件中使用 <code>&lt;ThemeContext.Provider value={theme}&gt;</code> 提供主题值</p>
+              <p>3. 中间组件 Toolbar 不需要接收或传递主题</p>
+              <p>4. 最底层组件 ThemedButton 使用 <code>useContext(ThemeContext)</code> 直接获取主题</p>
+              <p>5. 这样就避免了通过 props 层层传递数据的麻烦</p>
+            </div>
+          </div>
+        </ThemeContext.Provider>
+      );
+    }
+    
+    // 中间层组件 - 不需要关心主题，只是将组件树连接起来
+    function Toolbar() {
+      return (
+        <div className="component-box toolbar">
+          <h2>Toolbar 组件</h2>
+          <p>我是中间组件，不需要知道或传递主题</p>
+          
+          {/* 底层组件 */}
+          <ThemedButton />
+        </div>
+      );
+    }
+    
+    // 底层组件 - 直接使用 Context 获取主题
+    function ThemedButton() {
+      // 3. 使用 useContext 直接获取最近的 Provider 提供的值
+      const theme = React.useContext(ThemeContext);
+      
+      return (
+        <div className="component-box">
+          <h2>ThemedButton 组件</h2>
+          <p>我直接从 Context 获取主题: {theme}</p>
+          <button className="themed-button">
+            我是一个应用了主题的按钮
+          </button>
+        </div>
+      );
+    }
+    
+    // 渲染应用
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
