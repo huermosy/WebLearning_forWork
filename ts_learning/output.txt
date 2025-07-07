@@ -1,0 +1,84 @@
+我需要的输出结果是：
+json对象串：
+表格1：
+{
+	{
+		id: “table0_cell1_1”,
+		key: “正常_温差“,
+	},
+	{
+		id: “table0_cell1_2“,
+		key: “需注意_温差“,
+	},
+	......
+}
+
+
+表格2：
+{
+	{
+		id: “table1_cell0_1”,
+		key: “测定对象“,
+	},
+	{
+		id: “table1_cell0_3“,
+		key: “使用电压“,
+	},
+	......
+}
+
+表格3：
+{
+	{
+		id: “table2_cell1_1”,
+		key: “Point 1_温度测量“,
+	},
+	{
+		id: “table2_cell1_2“,
+		key: “Point 2_温度测量“,
+	},
+	......
+}
+
+表格4：
+{
+	{
+		id: “table3_cell1_0”,
+		key: “热像图“,
+	},
+	{
+		id: “table3_cell1_1“,
+		key: “可见光图“,
+	},
+	......
+}
+
+表格5：
+{
+	{
+		id: “table4_cell1_1”,
+		key: “测试仪器“,
+	},
+	{
+		id: “table4_cell1_3“,
+		key: “可见光图“,
+	},
+	{
+		id: “table4_cell2_1“,
+		key: “天气“,
+	},
+	......
+}
+
+表格6：
+{
+	{
+		id: “table5_cell1_1”,
+		key: “Sp1“,
+	},
+	{
+		id: “table5_cell2_1”,
+		key: “Bx1“,
+	}
+	......
+}
