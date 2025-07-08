@@ -1,0 +1,109 @@
+# Table Field Extraction Instructions (Neural Vision Model)^
+
+^
+
+## Task Description^
+
+You need to scan HTML tables like a human eye and extract all fields that need to be replaced.^
+
+**Note: All data cells in the data area (i.e., not in header rows or header columns) must be extracted, regardless of whether the cell has content or not.**^
+
+The output should be a JSON array with the number of target cells added outside the JSON string, without any explanation.^
+
+^
+
+## Table Structure Description^
+
+Just as human eyes can quickly identify special structures, please pay special attention to:^
+
+^
+
+### Diagonal Headers:^
+
+- Feature: The top-left cell has a data-diagonal-split-type attribute^
+
+- Row headers are in the first cell of each row^
+
+- Column headers are in the first row of each column^
+
+- All others are data cells^
+
+- key = row_header_column_header^
+
+^
+
+### Single-row Tables:^
+
+- Feature: The table has only one row^
+
+- Target cells are cells at positions 2, 4, 6... as data cells^
+
+- The key for each target cell is the text of the cell to its left^
+
+^
+
+### Regular Tables:^
+
+- Feature: First column and first row are usually headers, or there may be an additional header row spanning across a column^
+
+- Row headers are in the first cell of each row^
+
+- Column headers are in the first row of that column^
+
+- All others are data cells^
+
+- key = row_header_column_header or just one header^
+
+^
+
+## Four-step Method for Human-like Table Scanning^
+
+^
+
+### Step 1: Locate Target Cells^
+
+Just as human eyes are naturally drawn to "blank spaces" in tables, you first need to:^
+
+- Identify all data cells in the data area of the table, i.e., cells that are not in the header area, description area, or row/column headers, regardless of whether they have content or not. These should all be considered "target cells."^
+
+- Do not miss any data cell (whether filled or empty).^
+
+^
+
+### Step 2: Find Labels^
+
+For each target cell, human eyes automatically look for labels that "explain what it is":^
+
+- First, check if there is text to its left; the text on the left is usually the label for this cell^
+
+- If not, check if there is text in the **header cell above it (usually in the first row, or in the second row if there is a table title)**, as the text above might be a column header^
+
+- For special tables (such as diagonal headers), both row headers and column headers are needed^
+
+^
+
+### Step 3: Combine Keywords^
+
+The human brain naturally combines labels into meaningful keywords:^
+
+- If two labels are found (row header + column header), connect them with an underscore: row_header_column_header^
+
+- If only one label is found (left or above), use this label directly as the key^
+
+^
+
+### Step 4: Record Results^
+
+Create a record for each "target cell" with two pieces of information:^
+
+- id: The unique identifier of the cell (data-cell-id attribute value)^
+
+- key: The keyword obtained in Step 3^
+
+^
+
+Please follow: think according to the rules first, don't rush to output results, self-check each step, but ultimately do not output your thought process, only output in the required format.^
+
+^
+
+**Note: All data cells in the data area (i.e., not in header rows or header columns) must be extracted, regardless of whether the cell has content or not.**

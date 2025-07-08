@@ -1,0 +1,69 @@
+Table Field Extraction Instructions (Neural Vision Model)
+Task Description
+You need to scan HTML tables like the human eye and extract all fields that need replacement. Note: All data cells that belong to the data area (i.e., not header rows, not header columns) must be extracted, regardless of whether the cell has content. The output should be a JSON array plus the number of target cells, without any explanation.
+
+Table Structure Explanation
+Like how human eyes quickly recognize special structures, please pay special attention to:
+
+Special case: The table name row is in the first row, occupying multiple columns.
+
+Diagonal Header:
+Feature: Top-left cell has data-diagonal-split-type attribute
+Row headers are in the first cell of each row
+Column headers are in the first row of each column
+All others are data cells
+key = row_header_column_header
+Single Row Table:
+Feature: Table has only one row or special layout with alternating label-value pairs
+Target cells are cells in even-numbered positions (2, 4, 6...) as data cells
+Each target cell's key MUST be the non-empty text of the cell directly to its left
+Validation required: The key should never be empty - if it appears empty, check if:
+   - The cell to its left exists and has been properly identified as a label
+   - There might be invisible characters or formatting issues in the label cell
+   - The label cell is properly distinguished from a header or title cell
+If no valid label is found, use the cell's position (e.g., "column_2") as a fallback key
+Normal Table:
+Feature: First column and first row are typically headers
+Row headers may exist in the first cell of each row
+Column headers may exist in the first row of each column
+All others are data cells
+key = row_header_column_header/row_header/column_header
+Please follow: Think through the rules first, don't rush to output results, verify each step to ensure correctness. Most importantly: I've marked parts that require self-verification
+
+Four-Step Method for Table Scanning
+Step 1: Locate Target Cells
+Just as human eyes are naturally drawn to "blank spaces" in a table, you need to first:
+
+Identify all data cells in the data area, i.e., cells that are not in title areas, description areas, or row/column headers, regardless of content - these are your "target cells"
+Don't miss any data cell (both filled and empty). If any are missed, repeat this step. Self-verification required: check if you've extracted the IDs of empty cells; if not, repeat this step.
+Step 2: Find Table Name Rows/Columns
+Scan the table structure, note if there are table name rows/columns:
+
+Check if the table has name rows/columns. Table name rows/columns cannot be used as column headers or row headers
+Step 3: Find Labels (Row Headers or Column Headers)
+For each "target cell", automatically look for labels that "explain what it is":
+
+First look at the header cell above it (usually in the first row, possibly in the second row if there are table title row/columns, if there's only a table title then there are no column headers) as the label-column header
+Self-verification required: Table names cannot be used as label-column headers
+If the above steps don't find suitable column headers, then there are no column headers!
+Then look if there's text to its left, which is usually the label-row header
+For special tables (e.g., diagonal headers), both row headers and column headers are needed
+Record column headers and row headers
+Step 4: Verify Labels
+Verify the data from steps 2 and 3 to confirm label acquisition is correct:
+
+If column headers and table titles are identical, step 3 was executed incorrectly - please repeat step 3
+Possible results: 1. Both column headers and row headers exist 2. Only row headers or column headers exist
+Step 5: Combine Keywords
+Naturally combine labels into meaningful keywords:
+
+If two labels are found (row header + column header), connect them with an underscore: row_header_column_header
+If only one label is found (left or above), making sure to exclude table name row cases, use this label directly as the key without an underscore
+Labels will replace all original content
+Step 6: Record Results
+Create a record for each "target cell" containing two pieces of information:
+
+id: The unique identifier of the cell (data-cell-id attribute value)
+key: The keyword obtained in step 3
+Self-verify that data-cell-id exists, and the output JSON string is sorted by data-cell-id from smallest to largest
+Note: All data cells that belong to the data area (i.e., not header rows, not header columns) must be extracted, regardless of whether the cell has content.
